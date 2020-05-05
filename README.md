@@ -6,6 +6,17 @@ A tiny Unofficial WealthSimple Trade API Wrapper for JavaScript, supporting the 
 
 **USE AT YOUR OWN RISK**. This is an unofficial WealthSimple Trade API Wrapper, and it is new. While i did (to my best ability) test the functions, there is absolutely no guarantee that there are no bugs in the code. The API Wrapper will be improved over time.
 
+**DO NOT LEVERAGE THIS IN ATTEMPT TO DISRUPT ORDERLY MARKET FUNCTIONS**. This package is provided to you so you can
+build cool shit with it, but you should understand that you have a responsibility to not engage in illegal
+trading behaviours that can disrupt orderly market functions. This means that you should not flood the API with orders
+in a fast manner. You might even get banned or locked out by WealthSimple Trade if you abuse their endpoints.
+
+You would be abusing this tool if you are leveraging it to carry out tactics that would provide you
+illegitimate personal gains. For example, [Spoofing](https://en.wikipedia.org/wiki/Spoofing_(finance)) is a forbidden tactic that has demonstrable negative effects on the operation of the markets.
+
+My recommendation is to be very conservative on how many orders you place within a small timeframe. I have no idea what
+the maximum amount of orders is by any timeframe, but if you have a gut feeling that it is too much, then it is too much.
+
 ## Getting Started
 
 Before playing with **wstrade-api**, you must have a valid
@@ -44,25 +55,37 @@ After installing **wstrade-api** from the npm registry, import it into your Java
 import trade from 'wstrade-api';
 ```
 
+## Server-Side Limitation
+
+This wrapper will not work when executed on the client-side due to the underlying CORS security limitation imposed by the WealthSimple Trade endpoints.
+If you wish to build a front-end application, you will have to design an architecture where the server
+does all of the API calls.
+
+<a id="index"></a>
+
 ## Jump to
 
-* [——> trade.login()](#login)
-* [——> trade.getAccounts()](#getAccounts)
-* [——> trade.getAccountData()](#getAccountData)
-* [——> trade.getHistory()](#getHistory)
-* [——> trade.getBankAccounts()](#getBankAccounts)
-* [——> trade.getDeposits()](#getDeposits)
-* [——> trade.getExchangeRates()](#getExchangeRates)
-* [——> trade.getOrdersByPage()](#getOrdersByPage)
-* [——> trade.getOrders()](#getOrders)
-* [——> trade.getPendingOrders()](#getPendingOrders)
-* [——> trade.getFilledOrders()](#getFilledOrders)
-* [——> trade.getCancelledOrders()](#getCancelledOrders)
-* [——> trade.cancelOrder()](#cancelOrder)
-* [——> trade.cancelPendingOrders()](#cancelPendingOrders)
-* [——> trade.getSecurity()](#getSecurity)
-* [——> trade.placeLimitBuy()](#placeLimitBuy)
-* [——> trade.placeLimitSell()](#placeLimitSell)
+* [trade.login()](#login)
+* [trade.refresh()](#refresh)
+* [trade.addHeader()](#addHeader)
+* [trade.removeHeader()](#removeHeader)
+* [trade.clearHeaders()](#clearHeaders)
+* [trade.getAccounts()](#getAccounts)
+* [trade.getAccountData()](#getAccountData)
+* [trade.getHistory()](#getHistory)
+* [trade.getBankAccounts()](#getBankAccounts)
+* [trade.getDeposits()](#getDeposits)
+* [trade.getExchangeRates()](#getExchangeRates)
+* [trade.getOrdersByPage()](#getOrdersByPage)
+* [trade.getOrders()](#getOrders)
+* [trade.getPendingOrders()](#getPendingOrders)
+* [trade.getFilledOrders()](#getFilledOrders)
+* [trade.getCancelledOrders()](#getCancelledOrders)
+* [trade.cancelOrder()](#cancelOrder)
+* [trade.cancelPendingOrders()](#cancelPendingOrders)
+* [trade.getSecurity()](#getSecurity)
+* [trade.placeLimitBuy()](#placeLimitBuy)
+* [trade.placeLimitSell()](#placeLimitSell)
 
 
 ## Failure return
@@ -81,6 +104,9 @@ For all API Calls, the failure return is standardized to the following:
 }
 ```
 
+[Back to top—>](#index)
+
+
 <a id="login"></a>
 
 ## **trade**.login(*email*, *password*) -> **Promise\<result\>**
@@ -94,7 +120,7 @@ Attempts to login to the WealthSimple Trade platform using the email and passwor
 | username |Yes|
 | password |Yes|
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {
@@ -110,6 +136,74 @@ Attempts to login to the WealthSimple Trade platform using the email and passwor
 }
 ```
 
+[Back to top—>](#index)
+
+
+<a id="refresh"></a>
+
+## **trade**.refresh(*tokens*) -> **Promise\<result\>**
+
+
+Generates a new set of access and refresh tokens.
+
+
+| Parameters|Required|    
+|----------|---------------------|
+| tokens |Yes|
+
+### Return on Success
+
+```javascript
+{
+    // A new generated set of access and refresh tokens
+    access: 'XXXXX',
+    refresh: 'YYYY'
+}
+```
+
+[Back to top—>](#index)
+
+<a id="addHeader"></a>
+
+## **trade**.addHeader(*name*, *value*) -> **void**
+
+
+Appends a custom header to all requests made with this wrapper.
+
+
+| Parameters|Required|    
+|----------|---------------------|
+| name |Yes|
+| value |Yes|
+
+[Back to top—>](#index)
+
+
+<a id="removeHeader"></a>
+
+## **trade**.removeHeader(*name*) -> **void**
+
+
+Removes a custom header.
+
+
+| Parameters|Required|    
+|----------|---------------------|
+| name |Yes|
+
+[Back to top—>](#index)
+
+
+<a id="clearHeaders"></a>
+
+## **trade**.clearHeaders() -> **void**
+
+
+Deletes all custom headers.
+
+[Back to top—>](#index)
+
+
 <a id="getAccounts"></a>
 
 ## **trade**.getAccounts(*tokens*) -> **Promise\<result\>**
@@ -122,12 +216,15 @@ Grabs all account ids under this WealthSimple Trade account (i.e., all personal,
 |----------|---------------------|
 | tokens |Yes|
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 // A list of account ids
 ['non-registered-XXXXX', 'tfsa-XXXXX', ...]
 ```
+
+[Back to top—>](#index)
+
 
 <a id="getAccountData"></a>
 
@@ -141,7 +238,7 @@ Provides the general state information of the overall WealthSimple Trade account
 |----------|---------------------|
 | tokens |Yes|
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {
@@ -149,6 +246,9 @@ Provides the general state information of the overall WealthSimple Trade account
     ...
 }
 ```
+
+[Back to top—>](#index)
+
 
 <a id="getHistory"></a>
 
@@ -159,13 +259,13 @@ Captures a snapshot of the performance for a specific account
 in the provided time interval.
 
 
-| Parameters|Required|Allowed values    
+| Parameters|Required|Acceptable values    
 |----------|---------------------|-----------|
 | tokens |Yes||
 | interval |Yes|1d, 1w, 1m, 3m, 1y|
 | accountId |Yes||
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {
@@ -191,6 +291,9 @@ in the provided time interval.
 }
 ```
 
+[Back to top—>](#index)
+
+
 <a id="getBankAccounts"></a>
 
 
@@ -204,7 +307,7 @@ Provides a list of the bank accounts that have been linked to the WealthSimple T
 |----------|---------------------|
 | tokens |Yes|
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 [
@@ -222,6 +325,9 @@ Provides a list of the bank accounts that have been linked to the WealthSimple T
 ]
 ```
 
+[Back to top—>](#index)
+
+
 <a id="getDeposits"></a>
 
 ## **trade**.getDeposits(*tokens*) -> **Promise\<result\>**
@@ -234,7 +340,7 @@ All deposits (in progress, completed, and cancelled) made to the WealthSimple Tr
 |----------|---------------------|
 | tokens |Yes|
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 [
@@ -252,6 +358,9 @@ All deposits (in progress, completed, and cancelled) made to the WealthSimple Tr
 ]
 ```
 
+[Back to top—>](#index)
+
+
 <a id="getExchangeRates"></a>
 
 
@@ -264,7 +373,7 @@ Provides the current USD/CAD conversion rates for the WealthSimple Trade platfor
 |----------|---------------------|
 | tokens |Yes|
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {
@@ -276,6 +385,9 @@ Provides the current USD/CAD conversion rates for the WealthSimple Trade platfor
     }
 }
 ```
+
+[Back to top—>](#index)
+
 
 <a id="getOrdersByPage"></a>
 
@@ -294,7 +406,7 @@ you specify a page that exceeds the number of pages, the results list will be em
 | accountID|Yes||
 | page|Yes|```>=1```
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {
@@ -317,6 +429,9 @@ you specify a page that exceeds the number of pages, the results list will be em
     total: XXX
 }
 ```
+
+[Back to top—>](#index)
+
 
 <a id="getOrders"></a>
 
@@ -331,7 +446,7 @@ Grabs all orders (filled, pending, and cancelled) from a specific account under 
 | tokens |Yes|
 | accountID|Yes|
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {
@@ -354,6 +469,9 @@ Grabs all orders (filled, pending, and cancelled) from a specific account under 
     total: XXX
 }
 ```
+
+[Back to top—>](#index)
+
 
 <a id="getPendingOrders"></a>
 
@@ -370,7 +488,7 @@ Grabs all pending orders for the specified account under the WealthSimple Trade 
 | accountID|Yes|
 | ticker   |No
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {
@@ -394,6 +512,9 @@ Grabs all pending orders for the specified account under the WealthSimple Trade 
 }
 ```
 
+[Back to top—>](#index)
+
+
 <a id="getFilledOrders"></a>
 
 ## **trade**.getFilledOrders(*tokens*, *accountId*, *[ticker]*) -> **Promise\<result\>**
@@ -409,7 +530,7 @@ Grabs all filled orders for the specified account under the WealthSimple Trade a
 | accountID|Yes|
 | ticker   |No
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {
@@ -433,6 +554,9 @@ Grabs all filled orders for the specified account under the WealthSimple Trade a
 }
 ```
 
+[Back to top—>](#index)
+
+
 <a id="getCancelledOrders"></a>
 
 ## **trade**.getCancelledOrders(*tokens*, *accountId*, *[ticker]*) -> **Promise\<result\>**
@@ -448,7 +572,7 @@ Grabs all cancelled orders for the specified account under the WealthSimple Trad
 | accountID|Yes|
 | ticker   |No
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {
@@ -467,10 +591,13 @@ Grabs all cancelled orders for the specified account under the WealthSimple Trad
         ...
     ],
 
-    // Total number of filled orders
+    // Total number of cancelled orders
     total: XXX
 }
 ```
+
+[Back to top—>](#index)
+
 
 <a id="cancelOrder"></a>
 
@@ -486,14 +613,17 @@ Attempts to cancel the order associated with the provided orderId.
 | tokens |Yes|
 | orderId|Yes|
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {
-    // Information regarding the cancellation of the order
-    ...
+    order: 'order-XXXX',
+    response: {} // The API returns nothing.
 }
 ```
+
+[Back to top—>](#index)
+
 
 <a id="cancelPendingOrders"></a>
 
@@ -509,7 +639,7 @@ Place a cancellation order for all pending orders in the provided account.
 | tokens |Yes|
 | accountId|Yes|
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 [
@@ -529,6 +659,9 @@ Place a cancellation order for all pending orders in the provided account.
 ]
 ```
 
+[Back to top—>](#index)
+
+
 <a id="getSecurity"></a>
 
 ## **trade**.getSecurity(*tokens*, *ticker*) -> **Promise\<result\>**
@@ -541,7 +674,7 @@ Information about a security on the WealthSimple Trade Platform.
 | tokens |Yes|
 | ticker |Yes|
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {
@@ -549,6 +682,9 @@ Information about a security on the WealthSimple Trade Platform.
     ...
 }
 ```
+
+[Back to top—>](#index)
+
 
 <a id="placeLimitBuy"></a>
 
@@ -568,7 +704,7 @@ Attempts to purchase a given quantity of a security at a maximum price.
 
 
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {
@@ -577,9 +713,12 @@ Attempts to purchase a given quantity of a security at a maximum price.
 }
 ```
 
+[Back to top—>](#index)
+
+
 <a id="placeLimitSell"></a>
 
-## **trade**.placeLimitSell(*tokens*,*accountId*, *ticker*, *limit*, *quantity*) -> **Promise\<result\>** ##
+## **trade**.placeLimitSell(*tokens*, *accountId*, *ticker*, *limit*, *quantity*) -> **Promise\<result\>** ##
 
 Attempts to sell a given quantity of a security at a minimum price.
 
@@ -593,7 +732,7 @@ Attempts to sell a given quantity of a security at a minimum price.
 | quantity |Yes|
 
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {
@@ -601,6 +740,9 @@ Attempts to sell a given quantity of a security at a minimum price.
     ...
 }
 ```
+
+[Back to top—>](#index)
+
 
 ## Contributing
 
